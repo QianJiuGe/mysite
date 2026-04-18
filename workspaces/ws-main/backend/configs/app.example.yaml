@@ -1,0 +1,11 @@
+server:
+  http_addr: ":8080"
+mysql:
+  dsn: "root:root@tcp(127.0.0.1:3306)/mysite?parseTime=true&charset=utf8mb4"
+redis:
+  addr: "127.0.0.1:6379"
+  password: ""
+  db: 0
+auth:
+  default_admin_username: "admin"
+  default_admin_password: "Admin@123456"

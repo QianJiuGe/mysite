@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: mysite-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mysite
+    ports:
+      - "3306:3306"
+    volumes:
+      - ${HOME}/mysite/data/mysql:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d
+
+  redis:
+    image: redis:7.4
+    container_name: mysite-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ${HOME}/mysite/data/redis:/data

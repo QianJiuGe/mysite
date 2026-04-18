@@ -1,0 +1,33 @@
+# Data volumes (MySQL, Redis)
+data/
+
+# Go build
+bin/
+*.exe
+*.out
+*.test
+coverage.out
+
+# Node
+node_modules/
+
+# Frontend build
+dist/
+build/
+coverage/
+.next/
+
+# Env / local
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Runtime
+.runtime/
+
+# Codex
+.codex

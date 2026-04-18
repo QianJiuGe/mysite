@@ -1,0 +1,253 @@
+openapi: 3.0.3
+info:
+  title: mysite-back API
+  version: 0.3.0
+  description: Auth + Home + Admin minimal contract.
+servers:
+  - url: http://localhost:8080
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      operationId: getHealthz
+      responses:
+        '200':
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /v1/auth/register:
+    post:
+      summary: Register user (pending by default)
+      operationId: postRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/auth/login:
+    post:
+      summary: Login approved user
+      operationId: postLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '403':
+          description: Forbidden (pending or admin-only constraints)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/admin/users/pending:
+    get:
+      summary: List pending users (admin only)
+      operationId: getPendingUsers
+      responses:
+        '200':
+          description: Pending users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendingUsersResponse'
+        '403':
+          description: Admin only
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/admin/users/{userId}/approve:
+    post:
+      summary: Approve pending user (admin only)
+      operationId: postApproveUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApproveResponse'
+        '403':
+          description: Admin only
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/home:
+    get:
+      summary: Home payload for approved user
+      operationId: getHome
+      responses:
+        '200':
+          description: Home data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          example: ok
+
+    RegisterRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+        password:
+          type: string
+          minLength: 8
+          maxLength: 64
+
+    RegisterResponse:
+      type: object
+      required: [userId, status]
+      properties:
+        userId:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      required: [token, role]
+      properties:
+        token:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+
+    PendingUser:
+      type: object
+      required: [userId, username, status]
+      properties:
+        userId:
+          type: integer
+          format: int64
+        username:
+          type: string
+        status:
+          type: string
+          enum: [pending]
+
+    PendingUsersResponse:
+      type: object
+      required: [users]
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/PendingUser'
+
+    ApproveResponse:
+      type: object
+      required: [userId, status]
+      properties:
+        userId:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum: [approved]
+
+    HomeResponse:
+      type: object
+      required: [welcome, modules]
+      properties:
+        welcome:
+          type: string
+        modules:
+          type: array
+          items:
+            type: string
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+            - UNAUTHORIZED
+            - FORBIDDEN_PENDING_APPROVAL
+            - FORBIDDEN_ADMIN_ONLY
+            - NOT_FOUND
+            - INTERNAL_ERROR
+        message:
+          type: string

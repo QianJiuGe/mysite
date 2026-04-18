@@ -1,0 +1,17 @@
+# Node
+node_modules/
+
+# Build
+.next/
+dist/
+build/
+coverage/
+
+# Env / local
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
