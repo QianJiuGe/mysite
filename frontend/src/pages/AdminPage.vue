@@ -1,62 +1,95 @@
 <template>
-  <div class="admin-shell">
-    <aside class="admin-nav card-solid">
-      <h2>管理端</h2>
-      <button :class="['nav-item', { active: section === 'users' } ]" @click="section = 'users'">用户审批</button>
-      <button :class="['nav-item', { active: section === 'content' } ]" @click="section = 'content'">内容管理</button>
-      <button :class="['nav-item', { active: section === 'site' } ]" @click="section = 'site'">站点设置</button>
-      <button class="nav-item danger" @click="onLogout">退出登录</button>
-    </aside>
+  <AppLayout>
+    <div class="admin-page">
+      <div class="page-header">
+        <h2 class="headline-medium">控制台</h2>
+        <p class="body-medium text-on-surface-variant">管理用户、内容和站点配置</p>
+      </div>
 
-    <main class="admin-main">
-      <section class="card-solid" v-if="section === 'users'">
-        <div class="row between">
-          <h3>待审批用户</h3>
-          <button class="btn-primary" @click="loadPending" :disabled="loading">刷新</button>
-        </div>
-        <p v-if="errorText" class="error" style="margin-top: 12px">{{ errorText }}</p>
-        <p v-if="loading" class="muted loading-pulse" style="margin-top: 12px">加载中...</p>
-        <p v-else-if="pendingUsers.length === 0" class="muted">当前没有待审批用户。</p>
-        <div class="pending-grid" v-else>
-          <article class="pending-card" v-for="u in pendingUsers" :key="u.userId">
-            <h4>{{ u.username }}</h4>
-            <p>ID: {{ u.userId }}</p>
-            <p>状态: {{ u.status }}</p>
-            <button class="btn-primary" @click="onApprove(u.userId)" :disabled="approvingId === u.userId">
-              {{ approvingId === u.userId ? '审批中...' : '同意注册' }}
+      <!-- Tab bar -->
+      <div class="tab-bar">
+        <button v-for="tab in tabs" :key="tab.key" :class="['tab-item', { active: section === tab.key }]" @click="section = tab.key">
+          <span class="material-symbols-outlined" style="font-size:20px">{{ tab.icon }}</span>
+          {{ tab.label }}
+        </button>
+      </div>
+
+      <!-- Users section -->
+      <div v-if="section === 'users'" class="section">
+        <div class="card-elevated">
+          <div class="section-top">
+            <div>
+              <h3 class="title-large">待审批用户</h3>
+              <p class="body-small text-on-surface-variant" style="margin-top:4px">审核新注册用户的访问权限</p>
+            </div>
+            <button class="btn-tonal" @click="loadPending" :disabled="loading" style="height:36px;padding:0 16px">
+              <span class="material-symbols-outlined" style="font-size:18px">refresh</span>
+              刷新
             </button>
-          </article>
+          </div>
+
+          <p v-if="errorText" class="text-error body-small" style="margin-top:16px">{{ errorText }}</p>
+
+          <div v-if="loading" style="padding:32px 0;text-align:center">
+            <span class="body-medium text-on-surface-variant">加载中...</span>
+          </div>
+
+          <div v-else-if="pendingUsers.length === 0" class="empty-card">
+            <span class="material-symbols-outlined" style="font-size:40px;color:var(--md-outline)">verified</span>
+            <p class="body-medium text-on-surface-variant">当前没有待审批用户</p>
+          </div>
+
+          <div v-else class="user-list">
+            <div v-for="u in pendingUsers" :key="u.userId" class="user-row">
+              <div class="user-avatar">{{ u.username.charAt(0).toUpperCase() }}</div>
+              <div class="user-info">
+                <span class="label-large">{{ u.username }}</span>
+                <span class="body-small text-on-surface-variant font-mono">ID: {{ u.userId }}</span>
+              </div>
+              <span class="chip chip-warning" style="height:24px;padding:0 10px;font-size:11px">{{ u.status }}</span>
+              <button class="btn-filled" style="height:32px;padding:0 16px;font-size:12px" @click="onApprove(u.userId)" :disabled="approvingId === u.userId">
+                {{ approvingId === u.userId ? '处理中' : '通过' }}
+              </button>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="card-solid" v-if="section === 'content'">
-        <h3>内容管理（预留）</h3>
-        <p class="muted">后续用于管理首页模块、文章发布与推荐位。</p>
-      </section>
-
-      <section class="card-solid" v-if="section === 'site'">
-        <h3>站点设置（预留）</h3>
-        <p class="muted">后续用于导航、公告、主题和全局配置管理。</p>
-      </section>
-    </main>
-  </div>
+      <!-- Site settings section -->
+      <div v-if="section === 'site'" class="section">
+        <div class="card-elevated">
+          <div class="section-top">
+            <div>
+              <h3 class="title-large">站点设置</h3>
+              <p class="body-small text-on-surface-variant" style="margin-top:4px">管理导航、公告和全局配置</p>
+            </div>
+          </div>
+          <div class="empty-card">
+            <span class="material-symbols-outlined" style="font-size:40px;color:var(--md-outline)">construction</span>
+            <p class="body-medium text-on-surface-variant">即将推出</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </AppLayout>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-
+import AppLayout from '../components/AppLayout.vue'
 import { approveUser, getPendingUsers } from '../lib/api'
 import { clearAuth } from '../lib/auth'
 
-type PendingUser = {
-  userId: number
-  username: string
-  status: string
-}
+const tabs = [
+  { key: 'users', label: '用户审批', icon: 'group' },
+  { key: 'site', label: '站点设置', icon: 'settings' },
+]
+
+type PendingUser = { userId: number; username: string; status: string }
 
 const router = useRouter()
-const section = ref<'users' | 'content' | 'site'>('users')
+const section = ref('users')
 const pendingUsers = ref<PendingUser[]>([])
 const loading = ref(false)
 const approvingId = ref<number | null>(null)
@@ -70,37 +103,74 @@ const loadPending = async () => {
     pendingUsers.value = res.users
   } catch (e) {
     const err = e as { status?: number; message?: string }
-    if (err.status === 401 || err.status === 403) {
-      clearAuth()
-      await router.push('/login')
-      return
-    }
+    if (err.status === 401 || err.status === 403) { clearAuth(); await router.push('/login'); return }
     errorText.value = err.message ?? '加载待审批用户失败'
-  } finally {
-    loading.value = false
-  }
+  } finally { loading.value = false }
 }
 
 const onApprove = async (userId: number) => {
   errorText.value = ''
-  try {
-    approvingId.value = userId
-    await approveUser(userId)
-    await loadPending()
-  } catch (e) {
-    const err = e as { message?: string }
-    errorText.value = err.message ?? '审批失败'
-  } finally {
-    approvingId.value = null
-  }
+  try { approvingId.value = userId; await approveUser(userId); await loadPending() }
+  catch (e) { errorText.value = (e as { message?: string }).message ?? '审批失败' }
+  finally { approvingId.value = null }
 }
 
-const onLogout = async () => {
-  clearAuth()
-  await router.push('/login')
-}
-
-onMounted(async () => {
-  await loadPending()
-})
+onMounted(loadPending)
 </script>
+
+<style scoped>
+.admin-page { max-width: 760px; }
+.page-header { margin-bottom: 24px; }
+
+.tab-bar {
+  display: flex; gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tab-item {
+  display: flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 20px;
+  border: 1px solid var(--md-outline-variant); border-radius: var(--md-radius-full);
+  background: transparent;
+  font: var(--md-label-large); color: var(--md-on-surface-variant);
+  cursor: pointer;
+  transition: all var(--md-duration-short) var(--md-ease-standard);
+}
+.tab-item:hover { background: rgba(28,27,31,0.08); }
+.tab-item.active {
+  background: var(--md-secondary-container); border-color: transparent;
+  color: var(--md-on-secondary-container);
+}
+.tab-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+
+.section-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.empty-card {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; padding: 40px 0;
+}
+
+.user-list { display: flex; flex-direction: column; gap: 8px; }
+
+.user-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  background: var(--md-surface-container); border-radius: var(--md-radius-md);
+  transition: background var(--md-duration-short) var(--md-ease-standard);
+}
+.user-row:hover { background: var(--md-surface-container-high); }
+
+.user-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--md-primary-container); color: var(--md-on-primary-container);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: 16px; flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1; display: flex; flex-direction: column; min-width: 0;
+}
+</style>

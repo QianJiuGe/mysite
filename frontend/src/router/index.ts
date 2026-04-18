@@ -1,42 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import AdminPage from '../pages/AdminPage.vue'
-import BlogListPage from '../pages/BlogListPage.vue'
-import BlogPostPage from '../pages/BlogPostPage.vue'
-import HomePage from '../pages/HomePage.vue'
-import LoginPage from '../pages/LoginPage.vue'
-import PendingApprovalPage from '../pages/PendingApprovalPage.vue'
-import ProjectDetailPage from '../pages/ProjectDetailPage.vue'
-import ProjectsPage from '../pages/ProjectsPage.vue'
-import RegisterPage from '../pages/RegisterPage.vue'
-import { getRole, getToken } from '../lib/auth'
+import { getToken, getRole } from '../lib/auth'
+
+const BlogListPage = () => import('../pages/BlogListPage.vue')
+const BlogPostPage = () => import('../pages/BlogPostPage.vue')
+const MemoPage = () => import('../pages/MemoPage.vue')
+const LoginPage = () => import('../pages/LoginPage.vue')
+const RegisterPage = () => import('../pages/RegisterPage.vue')
+const PendingApprovalPage = () => import('../pages/PendingApprovalPage.vue')
+const AdminPage = () => import('../pages/AdminPage.vue')
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', redirect: '/login' },
+    { path: '/', redirect: '/blog' },
+    { path: '/blog', component: BlogListPage },
+    { path: '/blog/:slug', component: BlogPostPage },
+    { path: '/memo', component: MemoPage, meta: { requiresAuth: true } },
     { path: '/login', component: LoginPage },
     { path: '/register', component: RegisterPage },
     { path: '/pending-approval', component: PendingApprovalPage },
-    { path: '/home', component: HomePage, meta: { requiresAuth: true } },
-    { path: '/blog', component: BlogListPage, meta: { requiresAuth: true } },
-    { path: '/blog/:slug', component: BlogPostPage, meta: { requiresAuth: true } },
-    { path: '/projects', component: ProjectsPage, meta: { requiresAuth: true } },
-    { path: '/projects/:id', component: ProjectDetailPage, meta: { requiresAuth: true } },
-    { path: '/admin', component: AdminPage, meta: { requiresAuth: true, adminOnly: true } },
+    { path: '/admin', component: AdminPage, meta: { requiresAuth: true, requiresAdmin: true } },
   ],
 })
 
 router.beforeEach((to) => {
-  const token = getToken()
-  const role = getRole()
-  if (to.meta.requiresAuth && !token) {
+  if (to.meta.requiresAuth && !getToken()) {
     return '/login'
   }
-  if (to.meta.adminOnly && role !== 'admin') {
-    return '/home'
+  if (to.meta.requiresAdmin && getRole() !== 'admin') {
+    return '/blog'
   }
-  return true
 })
 
 export default router

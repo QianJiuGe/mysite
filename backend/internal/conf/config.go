@@ -23,6 +23,9 @@ type Config struct {
 		DefaultAdminUsername string `yaml:"default_admin_username"`
 		DefaultAdminPassword string `yaml:"default_admin_password"`
 	} `yaml:"auth"`
+	Blog struct {
+		Dir string `yaml:"dir"`
+	} `yaml:"blog"`
 }
 
 func Load(path string) (*Config, error) {

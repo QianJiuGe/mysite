@@ -1,0 +1,48 @@
+---
+description: 开发工作流：每次修改代码后必须编译验证并重启服务
+alwaysApply: true
+---
+
+# 开发工作流
+
+每次修改代码后，必须完成以下流程，不可跳过：
+
+## 1. 前后端联动检查
+
+修改后端 API（路径、参数、返回值）时，必须同步检查并更新前端调用代码（`src/lib/api.ts` 及相关页面）。反之亦然。
+
+## 2. 编译验证
+
+```bash
+# 后端
+export GOROOT="$HOME/.local/go" && export PATH="$GOROOT/bin:$PATH"
+cd backend && go build ./cmd/server
+
+# 前端
+cd frontend && npm run build
+```
+
+两者都必须通过，不能只验证其中一个。
+
+## 3. 重启服务
+
+编译通过后，杀掉旧进程并重启：
+
+```bash
+# 杀旧进程
+lsof -ti :8080 | xargs kill -9 2>/dev/null
+
+# 启动后端
+cd backend && go run ./cmd/server -config ./configs/app.example.yaml
+
+# 前端 Vite 会自动热更新，如果未运行则启动
+cd frontend && npm run dev
+```
+
+## 4. 冒烟验证
+
+重启后做基本验证（如 curl 关键接口），确认服务正常响应。
+
+## 流程总结
+
+修改代码 → 编译验证（go build + npm run build） → 重启服务 → 冒烟验证。每次都必须走完。

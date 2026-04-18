@@ -1,72 +1,104 @@
 :root {
-  --color-bg-page: #f3f5f8;
-  --color-bg-elevated: #e8edf4;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f8fafc;
-  --color-border: #d7dee7;
-  --color-border-hover: #b8c4d4;
-  --color-text-primary: #111827;
-  --color-text-secondary: #4b5563;
-  --color-text-tertiary: #9ca3af;
-  --color-accent: #0f5a9d;
-  --color-accent-hover: #0d4e8a;
-  --color-accent-soft: #dfeefc;
-  --color-accent-soft-hover: #cde3f8;
-  --color-danger: #b42318;
-  --color-danger-soft: #fef2f2;
-  --color-success: #059669;
-  --color-success-soft: #ecfdf5;
+  /* === Primary === */
+  --md-primary: #6750A4;
+  --md-on-primary: #FFFFFF;
+  --md-primary-container: #EADDFF;
+  --md-on-primary-container: #21005D;
 
-  --font-family-sans: 'Inter', 'IBM Plex Sans', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-family-serif: 'Noto Serif SC', 'Source Han Serif SC', serif;
-  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  /* === Secondary === */
+  --md-secondary: #625B71;
+  --md-on-secondary: #FFFFFF;
+  --md-secondary-container: #E8DEF8;
+  --md-on-secondary-container: #1D192B;
 
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 20px;
-  --font-size-xl: 28px;
-  --font-size-2xl: 36px;
-  --font-size-3xl: 44px;
+  /* === Tertiary === */
+  --md-tertiary: #7D5260;
+  --md-on-tertiary: #FFFFFF;
+  --md-tertiary-container: #FFD8E4;
+  --md-on-tertiary-container: #31111D;
 
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+  /* === Error === */
+  --md-error: #B3261E;
+  --md-on-error: #FFFFFF;
+  --md-error-container: #F9DEDC;
+  --md-on-error-container: #410E0B;
 
-  --line-height-tight: 1.25;
-  --line-height-base: 1.6;
-  --line-height-relaxed: 1.85;
+  /* === Surface === */
+  --md-surface: #FFFBFE;
+  --md-surface-dim: #DED8E1;
+  --md-surface-bright: #FFFBFE;
+  --md-surface-container-lowest: #FFFFFF;
+  --md-surface-container-low: #F7F2FA;
+  --md-surface-container: #F3EDF7;
+  --md-surface-container-high: #ECE6F0;
+  --md-surface-container-highest: #E6E0E9;
+  --md-surface-variant: #E7E0EC;
 
-  --letter-spacing-tight: -0.02em;
-  --letter-spacing-wide: 0.06em;
-  --letter-spacing-widest: 0.12em;
+  /* === On Surface / Outline === */
+  --md-on-surface: #1C1B1F;
+  --md-on-surface-variant: #49454F;
+  --md-outline: #79747E;
+  --md-outline-variant: #CAC4D0;
 
-  --space-4: 4px;
-  --space-8: 8px;
-  --space-12: 12px;
-  --space-16: 16px;
-  --space-20: 20px;
-  --space-24: 24px;
-  --space-32: 32px;
-  --space-40: 40px;
-  --space-56: 56px;
-  --space-72: 72px;
+  /* === Success (custom) === */
+  --md-success: #1B873B;
+  --md-success-container: rgba(52, 199, 89, 0.12);
+  --md-warning: #9E6A03;
+  --md-warning-container: rgba(255, 149, 0, 0.12);
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* === Typography === */
+  --md-font-sans: 'Google Sans', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --md-font-mono: 'Roboto Mono', 'Consolas', monospace;
 
-  --shadow-sm: 0 2px 8px rgba(17, 24, 39, 0.06);
-  --shadow-md: 0 8px 24px rgba(17, 24, 39, 0.1);
-  --shadow-lg: 0 18px 45px rgba(17, 24, 39, 0.16);
-  --shadow-glow: 0 0 0 3px rgba(15, 90, 157, 0.16);
+  /* Display */
+  --md-display-small: 500 36px/44px var(--md-font-sans);
+  /* Headline */
+  --md-headline-medium: 400 28px/36px var(--md-font-sans);
+  /* Title */
+  --md-title-large: 500 22px/28px var(--md-font-sans);
+  --md-title-small: 500 14px/20px var(--md-font-sans);
+  /* Body */
+  --md-body-large: 400 16px/24px var(--md-font-sans);
+  --md-body-medium: 400 14px/20px var(--md-font-sans);
+  --md-body-small: 400 12px/16px var(--md-font-sans);
+  /* Label */
+  --md-label-large: 500 14px/20px var(--md-font-sans);
+  --md-label-medium: 500 12px/16px var(--md-font-sans);
+  --md-label-small: 500 11px/16px var(--md-font-sans);
 
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
-  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* === Radius === */
+  --md-radius-full: 9999px;
+  --md-radius-xl: 28px;
+  --md-radius-lg: 16px;
+  --md-radius-md: 12px;
+  --md-radius-sm: 8px;
+  --md-radius-xs: 4px;
 
-  --container-max: 1120px;
+  /* === Elevation === */
+  --md-elevation-0: none;
+  --md-elevation-1: 0 1px 2px rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+  --md-elevation-2: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px 2px rgba(0,0,0,0.15);
+  --md-elevation-3: 0 4px 8px 3px rgba(0,0,0,0.15), 0 1px 3px rgba(0,0,0,0.3);
+  --md-elevation-4: 0 6px 10px 4px rgba(0,0,0,0.15), 0 2px 3px rgba(0,0,0,0.3);
+
+  /* === Easing === */
+  --md-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-ease-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-ease-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* === Duration === */
+  --md-duration-short: 200ms;
+  --md-duration-medium: 400ms;
+  --md-duration-long: 600ms;
+
+  /* === Layout === */
+  --md-nav-width: 280px;
+  --md-nav-collapsed: 80px;
+  --md-topbar-height: 64px;
+}
+
+/* === Material Symbols config === */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-size: 24px;
 }

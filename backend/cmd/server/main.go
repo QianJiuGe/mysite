@@ -36,7 +36,14 @@ func main() {
 		log.Fatalf("bootstrap default admin failed: %v", err)
 	}
 
-	svc := service.New(uc)
+	blogDir := cfg.Blog.Dir
+	if blogDir == "" {
+		blogDir = "../myresource/blog"
+	}
+	blogUC := biz.NewBlogUsecase(blogDir)
+	memoUC := biz.NewMemoUsecase(store)
+
+	svc := service.New(uc, blogUC, memoUC)
 	engine := server.NewEngine(svc)
 
 	log.Printf("backend listening on %s", cfg.Server.HTTPAddr)

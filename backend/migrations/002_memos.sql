@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS memos (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  content TEXT NOT NULL,
+  done BOOLEAN NOT NULL DEFAULT FALSE,
+  priority TINYINT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  INDEX idx_user_id (user_id)
+);

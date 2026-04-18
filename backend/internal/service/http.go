@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strconv"
@@ -13,11 +14,13 @@ import (
 )
 
 type Service struct {
-	uc *biz.Usecase
+	uc   *biz.Usecase
+	blog *biz.BlogUsecase
+	memo *biz.MemoUsecase
 }
 
-func New(uc *biz.Usecase) *Service {
-	return &Service{uc: uc}
+func New(uc *biz.Usecase, blog *biz.BlogUsecase, memo *biz.MemoUsecase) *Service {
+	return &Service{uc: uc, blog: blog, memo: memo}
 }
 
 func (s *Service) Register(c *gin.Context) {
@@ -142,6 +145,10 @@ func (s *Service) Home(c *gin.Context) {
 
 func (s *Service) Healthz(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
+}
+
+func (s *Service) GetSession(ctx context.Context, token string) (*model.Session, error) {
+	return s.uc.GetSessionByToken(ctx, token)
 }
 
 func (s *Service) currentSession(c *gin.Context) (*model.Session, error) {
