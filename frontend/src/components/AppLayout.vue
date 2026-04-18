@@ -1,7 +1,10 @@
 <template>
   <div class="app-layout">
+    <!-- Mobile scrim -->
+    <div v-if="mobileOpen" class="nav-scrim" @click="mobileOpen = false" />
+
     <!-- Navigation Drawer -->
-    <aside :class="['nav-drawer', { collapsed: navCollapsed }]">
+    <aside :class="['nav-drawer', { collapsed: navCollapsed, 'mobile-open': mobileOpen }]">
       <div class="nav-logo">
         <div class="logo-icon">H</div>
         <span v-if="!navCollapsed" class="logo-text">HuangTao.dev</span>
@@ -51,7 +54,7 @@
       <!-- Top App Bar -->
       <header class="top-bar">
         <div class="top-bar-left">
-          <button class="icon-btn" @click="navCollapsed = !navCollapsed">
+          <button class="icon-btn" @click="toggleNav">
             <span class="material-symbols-outlined">menu</span>
           </button>
           <h1 class="top-bar-title">{{ pageTitle }}</h1>
@@ -80,13 +83,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getToken, getRole, getUsername, clearAuth } from '../lib/auth'
 
 const route = useRoute()
 const router = useRouter()
 const navCollapsed = ref(false)
+const mobileOpen = ref(false)
+
+const isMobile = () => window.innerWidth <= 768
+
+const toggleNav = () => {
+  if (isMobile()) {
+    mobileOpen.value = !mobileOpen.value
+  } else {
+    navCollapsed.value = !navCollapsed.value
+  }
+}
 
 const isLoggedIn = computed(() => !!getToken())
 const role = computed(() => getRole())
@@ -109,6 +123,10 @@ const onLogout = async () => {
   clearAuth()
   await router.push('/blog')
 }
+
+watch(() => route.path, () => {
+  mobileOpen.value = false
+})
 </script>
 
 <style scoped>
@@ -324,8 +342,30 @@ const onLogout = async () => {
 }
 
 @media (max-width: 768px) {
-  .nav-drawer { display: none; }
+  .nav-drawer {
+    width: var(--md-nav-width);
+    transform: translateX(-100%);
+    transition: transform var(--md-duration-medium) var(--md-ease-standard);
+    box-shadow: none;
+  }
+  .nav-drawer.mobile-open {
+    transform: translateX(0);
+    box-shadow: var(--md-elevation-4);
+  }
+  .nav-drawer .nav-label,
+  .nav-drawer .logo-text,
+  .nav-drawer .nav-user-card:not(.collapsed) { display: flex; }
+  .nav-drawer.mobile-open .nav-label,
+  .nav-drawer.mobile-open .logo-text { display: inline; }
+  .nav-drawer.mobile-open .nav-user-card:not(.collapsed) { display: flex; }
   .main-area { margin-left: 0; }
   .content-area { padding: 16px; }
+}
+
+.nav-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  z-index: 199;
 }
 </style>
