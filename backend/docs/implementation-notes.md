@@ -22,11 +22,11 @@
 - Options Considered:
   - A: 仅继续占位 handler（放弃）
   - B: 直接实现最小业务闭环（采用）
-- Decision: 当前使用标准库 net/http 承载接口，按分层规范组织代码（server/service/biz/data），后续迁移到 Gin。
-- Trade-offs: 标准库零依赖快速启动，后续切换 Gin 以获得路由分组、中间件等能力。
+- Decision: 使用 Gin 框架承载接口，按分层规范组织代码（server/service/biz/data）。
+- Trade-offs: Gin 提供路由分组、中间件链、参数绑定等能力，轻量敏捷。
 - Impact: 注册/登录/审批/首页逻辑具备真实数据读写与会话验证。
 - Rollback Plan: 回退到骨架版 `cmd/server/main.go`。
-- Follow-up: 迁移到 Gin 框架、统一错误中间件。
+- Follow-up: 统一错误中间件。
 
 - Date: 2026-04-09
 - Change: 新增待审批用户列表接口 `GET /v1/admin/users/pending`

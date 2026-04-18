@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"log"
-	"net/http"
 
 	"github.com/QianJiuGe/mysite/backend/internal/biz"
 	"github.com/QianJiuGe/mysite/backend/internal/conf"
@@ -38,10 +37,10 @@ func main() {
 	}
 
 	svc := service.New(uc)
-	h := server.NewHTTPHandler(svc)
+	engine := server.NewEngine(svc)
 
 	log.Printf("backend listening on %s", cfg.Server.HTTPAddr)
-	if err := http.ListenAndServe(cfg.Server.HTTPAddr, h); err != nil {
+	if err := engine.Run(cfg.Server.HTTPAddr); err != nil {
 		log.Fatalf("server stopped: %v", err)
 	}
 }

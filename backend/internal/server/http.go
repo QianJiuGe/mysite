@@ -1,32 +1,47 @@
 package server
 
 import (
-	"net/http"
+	"github.com/gin-gonic/gin"
 
 	"github.com/QianJiuGe/mysite/backend/internal/service"
 )
 
-func NewHTTPHandler(svc *service.Service) http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", svc.Healthz)
-	mux.HandleFunc("/v1/auth/register", svc.Register)
-	mux.HandleFunc("/v1/auth/login", svc.Login)
-	mux.HandleFunc("/v1/admin/users/pending", svc.PendingUsers)
-	mux.HandleFunc("/v1/admin/users/", svc.ApproveUser)
-	mux.HandleFunc("/v1/home", svc.Home)
+func NewEngine(svc *service.Service) *gin.Engine {
+	r := gin.Default()
 
-	return withCORS(mux)
+	r.Use(cors())
+
+	r.GET("/healthz", svc.Healthz)
+
+	v1 := r.Group("/v1")
+	{
+		auth := v1.Group("/auth")
+		{
+			auth.POST("/register", svc.Register)
+			auth.POST("/login", svc.Login)
+		}
+
+		admin := v1.Group("/admin")
+		{
+			admin.GET("/users/pending", svc.PendingUsers)
+			admin.POST("/users/:userId/approve", svc.ApproveUser)
+		}
+
+		v1.GET("/home", svc.Home)
+	}
+
+	return r
 }
 
-func withCORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
+func cors() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
 			return
 		}
-		next.ServeHTTP(w, r)
-	})
+		c.Next()
+	}
 }
