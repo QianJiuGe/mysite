@@ -2,8 +2,7 @@
 
 ## 开始前必读顺序
 1. `../knowledge/ai/rules.md`
-2. `../knowledge/conventions/kratos.md`
-3. `./.rules.md`
+2. `./.rules.md`
 4. `./.anti-patterns.md`
 5. `./spec/acceptance-criteria.md`
 6. `./spec/api/openapi.yaml`

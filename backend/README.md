@@ -7,8 +7,8 @@
 完成 v1 最小闭环：注册（pending）-> 管理员审批 -> 登录 -> 首页接口。
 
 ## 技术选型
-- Go
-- Kratos 规范分层（`server/service/biz/data`）
+- Go + Gin
+- 分层架构（`server/service/biz/data`）
 - MySQL + Redis（Docker）
 
 ## 快速启动（本地）
@@ -35,6 +35,5 @@
 - `spec/`: API、领域、数据与测试规格。
 
 ## 下一步建议
-1. 切换到 proto + Kratos transport（按 `knowledge/conventions/kratos.md`）。
-2. 增加鉴权中间件、审计日志、限流。
-3. 增加接口自动化测试。
+1. 增加鉴权中间件、审计日志、限流。
+2. 增加接口自动化测试。
