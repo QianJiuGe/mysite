@@ -11,8 +11,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/QianJiuGe/mysite-back/internal/data"
-	"github.com/QianJiuGe/mysite-back/internal/model"
+	"github.com/QianJiuGe/mysite/backend/internal/data"
+	"github.com/QianJiuGe/mysite/backend/internal/model"
 )
 
 var (

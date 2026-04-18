@@ -13,7 +13,7 @@
 ```mermaid
 flowchart LR
   U[Visitor/User] --> F[Vue Frontend]
-  F --> B[Go Gin API]
+  F --> B[Go Backend API]
   B --> M[(MySQL)]
   B --> R[(Redis)]
   A[Admin] --> F

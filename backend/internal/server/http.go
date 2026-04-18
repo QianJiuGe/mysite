@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/QianJiuGe/mysite-back/internal/service"
+	"github.com/QianJiuGe/mysite/backend/internal/service"
 )
 
 func NewHTTPHandler(svc *service.Service) http.Handler {

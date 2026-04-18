@@ -6,11 +6,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/QianJiuGe/mysite-back/internal/biz"
-	"github.com/QianJiuGe/mysite-back/internal/conf"
-	"github.com/QianJiuGe/mysite-back/internal/data"
-	"github.com/QianJiuGe/mysite-back/internal/server"
-	"github.com/QianJiuGe/mysite-back/internal/service"
+	"github.com/QianJiuGe/mysite/backend/internal/biz"
+	"github.com/QianJiuGe/mysite/backend/internal/conf"
+	"github.com/QianJiuGe/mysite/backend/internal/data"
+	"github.com/QianJiuGe/mysite/backend/internal/server"
+	"github.com/QianJiuGe/mysite/backend/internal/service"
 )
 
 func main() {

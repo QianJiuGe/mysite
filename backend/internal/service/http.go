@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/QianJiuGe/mysite-back/internal/biz"
-	"github.com/QianJiuGe/mysite-back/internal/model"
+	"github.com/QianJiuGe/mysite/backend/internal/biz"
+	"github.com/QianJiuGe/mysite/backend/internal/model"
 )
 
 type Service struct {

@@ -1,4 +1,4 @@
-module github.com/QianJiuGe/mysite-back
+module github.com/QianJiuGe/mysite/backend
 
 go 1.22
 
